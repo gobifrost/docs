@@ -16,13 +16,16 @@ def test_solution_distribution_has_no_instance_sdk_or_private_delivery_artifacts
     descriptor = yaml.safe_load((ROOT / "bifrost.solution.yaml").read_text())
     package = json.loads((ROOT / "apps/bifrost-docs/package.json").read_text())
     lockfile = (ROOT / "apps/bifrost-docs/package-lock.json").read_text()
+    lockfile_data = json.loads(lockfile)
     bootstrap = (ROOT / "apps/bifrost-docs/src/main.tsx").read_text()
     vite_config = (ROOT / "apps/bifrost-docs/vite.config.ts").read_text()
     readme = (ROOT / "README.md").read_text()
 
-    assert descriptor["version"] == "0.1.2"
+    assert descriptor["version"] == "0.1.3"
     assert descriptor["allow_outbound_access"] is False
     assert "bifrost" not in package["dependencies"]
+    assert package["devDependencies"]["vitest"] == "^4.1.11"
+    assert lockfile_data["packages"][""]["devDependencies"]["vitest"] == "^4.1.11"
     assert '"node_modules/bifrost"' not in lockfile
     assert "VITE_BIFROST_SOLUTION_ID" in vite_config
     assert "solutionId: import.meta.env.VITE_BIFROST_SOLUTION_ID" in bootstrap

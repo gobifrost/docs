@@ -1,5 +1,5 @@
 slug: bifrost-docs
 name: Bifrost Docs
-version: 0.1.2
+version: 0.1.3
 allow_outbound_access: false
 allow_inbound_access: true
