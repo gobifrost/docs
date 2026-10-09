@@ -1,0 +1,338 @@
+workflows:
+  40183562-488a-4a2b-a1f5-63939cd1364c:
+    id: 40183562-488a-4a2b-a1f5-63939cd1364c
+    name: docs_migration_start
+    path: functions/migration.py
+    function_name: docs_migration_start
+    type: tool
+    description: "Start a checkpointed API-first IT Glue to Bifrost Docs migration after operator confirmation."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 1800
+  03ba038c-57e1-4753-8672-ca5d28063e93:
+    id: 03ba038c-57e1-4753-8672-ca5d28063e93
+    name: docs_migration_resume
+    path: functions/migration.py
+    function_name: docs_migration_resume
+    type: tool
+    description: "Resume an interrupted Bifrost Docs IT Glue migration from persisted checkpoints."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 1800
+  aeac005b-393f-47d9-b0cf-acad01591972:
+    id: aeac005b-393f-47d9-b0cf-acad01591972
+    name: docs_migration_status
+    path: functions/migration.py
+    function_name: docs_migration_status
+    type: tool
+    description: "Read checkpoint-backed status, counts, cursors, and recent failures for a Bifrost Docs migration."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 1800
+  2326e372-cb3e-4237-ac53-adab1fec8d80:
+    id: 2326e372-cb3e-4237-ac53-adab1fec8d80
+    name: docs_migration_retry_failures
+    path: functions/migration.py
+    function_name: docs_migration_retry_failures
+    type: tool
+    description: "Reset failed Bifrost Docs migration items and re-enumerate safely using deterministic IDs."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 1800
+  d1f20fe9-ee48-4de9-a051-93b0bf69a87e:
+    id: d1f20fe9-ee48-4de9-a051-93b0bf69a87e
+    name: docs_migration_cancel
+    path: functions/migration.py
+    function_name: docs_migration_cancel
+    type: tool
+    description: "Request cooperative cancellation of a Bifrost Docs migration at the next resource checkpoint."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 1800
+  60d1494c-2ce6-4f67-9d04-3cf9f26aaa9e:
+    id: 60d1494c-2ce6-4f67-9d04-3cf9f26aaa9e
+    name: docs_migration_run
+    path: functions/migration.py
+    function_name: docs_migration_run
+    type: workflow
+    description: "Long-running, checkpointed IT Glue migration worker. Operational timeout is set in the Solution manifest."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 86400
+  8b27d3f6-4d66-4e5f-8e36-0ea48f03b1a2:
+    id: 8b27d3f6-4d66-4e5f-8e36-0ea48f03b1a2
+    name: docs_migration_resolve_restrictions
+    path: functions/migration.py
+    function_name: docs_migration_resolve_restrictions
+    type: workflow
+    description: "Bounded operator repair for audited IT Glue restriction provenance findings."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 1800
+  00920e08-bfdd-4cca-9aa9-b2f10c1e36b4:
+    id: 00920e08-bfdd-4cca-9aa9-b2f10c1e36b4
+    name: docs_migration_preflight
+    path: functions/migration.py
+    function_name: docs_migration_preflight
+    type: tool
+    description: "List Bifrost organizations connected to IT Glue for a scoped documentation migration."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 300
+  175cd2bd-2805-433c-92e8-f1b7bdf1058e:
+    id: 175cd2bd-2805-433c-92e8-f1b7bdf1058e
+    name: docs_sync_knowledge_index
+    path: functions/indexing.py
+    function_name: docs_sync_knowledge_index
+    type: workflow
+    description: "Repair a bounded page of safe Bifrost Docs document knowledge for one organization."
+    category: Bifrost Docs Administration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 1800
+  9487470f-9a29-470c-886f-9f4ce67fbeb8:
+    id: 9487470f-9a29-470c-886f-9f4ce67fbeb8
+    name: docs_search_knowledge
+    path: functions/indexing.py
+    function_name: docs_search_knowledge
+    type: tool
+    description: "Search safe, non-restricted Bifrost Docs document excerpts for one authorized organization and return source citations."
+    category: Bifrost Docs
+    access_level: role_based
+    role_names: ["Bifrost Docs Reader", "Bifrost Docs Editor", "Bifrost Docs Administrator"]
+    timeout_seconds: 60
+  72e1e9a2-4f9c-41b1-b2d3-10df5f93fd72:
+    id: 72e1e9a2-4f9c-41b1-b2d3-10df5f93fd72
+    name: docs_search_catalog
+    path: functions/catalog.py
+    function_name: docs_search_catalog
+    type: tool
+    description: "Search authorized Bifrost Docs documents, configurations, locations, flexible assets, and password metadata without revealing secrets."
+    category: Bifrost Docs
+    access_level: role_based
+    role_names: ["Bifrost Docs Reader", "Bifrost Docs Editor", "Bifrost Docs Administrator"]
+    timeout_seconds: 1800
+  b7a4a0a3-df26-40b4-b0a4-5601854f4cd6:
+    id: b7a4a0a3-df26-40b4-b0a4-5601854f4cd6
+    name: docs_list_organizations
+    path: functions/catalog.py
+    function_name: docs_list_organizations
+    type: workflow
+    description: "Return the Docs organization scope that the authenticated caller may use."
+    category: Bifrost Docs
+    access_level: role_based
+    role_names: ["Bifrost Docs Reader", "Bifrost Docs Editor", "Bifrost Docs Administrator"]
+    timeout_seconds: 60
+  cf73f8a1-07a4-4b34-9615-bb9134b78227:
+    id: cf73f8a1-07a4-4b34-9615-bb9134b78227
+    name: docs_create_draft
+    path: functions/authoring.py
+    function_name: docs_create_draft
+    type: tool
+    description: "Create a bounded, tenant-scoped Bifrost Docs draft with safe ticket citations."
+    category: Bifrost Docs Authoring
+    access_level: role_based
+    role_names: ["Bifrost Docs Editor", "Bifrost Docs Administrator"]
+    timeout_seconds: 60
+  b53f8513-a6c1-4c72-a360-721e3bcbdc19:
+    id: b53f8513-a6c1-4c72-a360-721e3bcbdc19
+    name: docs_update_draft
+    path: functions/authoring.py
+    function_name: docs_update_draft
+    type: tool
+    description: "Update a bounded Bifrost Docs native draft before provider Docs Admin publication."
+    category: Bifrost Docs Authoring
+    access_level: role_based
+    role_names: ["Bifrost Docs Editor", "Bifrost Docs Administrator"]
+    timeout_seconds: 60
+  21951467-dc4b-4627-8742-b629643750f6:
+    id: 21951467-dc4b-4627-8742-b629643750f6
+    name: docs_publish_draft
+    path: functions/authoring.py
+    function_name: docs_publish_draft
+    type: tool
+    description: "Publish a confirmed native Bifrost Docs draft and index its safe organization-scoped content."
+    category: Bifrost Docs Authoring
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 60
+  79c26aee-14d7-4f93-bfa0-8a7649e6fb50:
+    id: 79c26aee-14d7-4f93-bfa0-8a7649e6fb50
+    name: docs_archive_native
+    path: functions/authoring.py
+    function_name: docs_archive_native
+    type: tool
+    description: "Archive a native Bifrost Docs document and remove its knowledge entry."
+    category: Bifrost Docs Authoring
+    access_level: role_based
+    role_names: ["Bifrost Docs Editor", "Bifrost Docs Administrator"]
+    timeout_seconds: 60
+  8d7bb20b-2a27-436d-bd75-61a82d501243:
+    id: 8d7bb20b-2a27-436d-bd75-61a82d501243
+    name: docs_update_document
+    path: functions/document_mutations.py
+    function_name: docs_update_document
+    type: workflow
+    description: "Update title, content, and folder for one tenant-scoped Bifrost Docs document."
+    category: Bifrost Docs
+    access_level: role_based
+    role_names: ["Bifrost Docs Editor", "Bifrost Docs Administrator"]
+    timeout_seconds: 120
+  34d3d63b-1bca-4698-8fcc-eb9b70b9d9ea:
+    id: 34d3d63b-1bca-4698-8fcc-eb9b70b9d9ea
+    name: docs_move_document_folder
+    path: functions/folders.py
+    function_name: docs_move_document_folder
+    type: workflow
+    description: "Move a local Bifrost Docs folder copy and recompute its visible descendant hierarchy."
+    category: Bifrost Docs
+    access_level: role_based
+    role_names: ["Bifrost Docs Editor", "Bifrost Docs Administrator"]
+    timeout_seconds: 120
+  8447bf66-212a-458d-8398-bf922a69da6e:
+    id: 8447bf66-212a-458d-8398-bf922a69da6e
+    name: docs_delete_document
+    path: functions/document_mutations.py
+    function_name: docs_delete_document
+    type: workflow
+    description: "Delete one tenant-scoped Bifrost Docs document and its managed children."
+    category: Bifrost Docs
+    access_level: role_based
+    role_names: ["Bifrost Docs Editor", "Bifrost Docs Administrator"]
+    timeout_seconds: 120
+  bc8bb45b-74be-4415-be7d-c6e75c373778:
+    id: bc8bb45b-74be-4415-be7d-c6e75c373778
+    name: docs_bulk_archive_documents
+    path: functions/document_mutations.py
+    function_name: docs_bulk_archive_documents
+    type: workflow
+    description: "Archive a bounded selection of native Bifrost Docs documents without changing source-owned records."
+    category: Bifrost Docs
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 120
+  8944e021-5cb6-40c4-91d4-88a81180a7b0:
+    id: 8944e021-5cb6-40c4-91d4-88a81180a7b0
+    name: docs_ensure_file_grant
+    path: functions/file_grants.py
+    function_name: docs_ensure_file_grant
+    type: workflow
+    description: "Establish the exact Bifrost organization file prefix before a native attachment upload."
+    category: Bifrost Docs
+    access_level: role_based
+    role_names: ["Bifrost Docs Editor", "Bifrost Docs Administrator"]
+    timeout_seconds: 60
+  f8e8311b-2e92-4fd2-bc3b-094ff64acaa2:
+    id: f8e8311b-2e92-4fd2-bc3b-094ff64acaa2
+    name: docs_register_attachment
+    path: functions/attachments.py
+    function_name: docs_register_attachment
+    type: workflow
+    description: "Register a verified browser-uploaded Bifrost Docs record attachment."
+    category: Bifrost Docs
+    access_level: role_based
+    role_names: ["Bifrost Docs Editor", "Bifrost Docs Administrator"]
+    timeout_seconds: 120
+  8aec8874-4676-4c8a-b370-088197836ddf:
+    id: 8aec8874-4676-4c8a-b370-088197836ddf
+    name: docs_delete_attachment
+    path: functions/attachments.py
+    function_name: docs_delete_attachment
+    type: workflow
+    description: "Delete a verified Bifrost Docs attachment file and its metadata with version protection."
+    category: Bifrost Docs
+    access_level: role_based
+    role_names: ["Bifrost Docs Editor", "Bifrost Docs Administrator"]
+    timeout_seconds: 120
+
+  c8ae8695-0e0b-56a9-8134-25bffa2f24e5:
+    id: c8ae8695-0e0b-56a9-8134-25bffa2f24e5
+    name: docs_export_recovery_start
+    path: functions/export_recovery.py
+    function_name: docs_export_recovery_start
+    type: tool
+    description: "Recover failed non-password files through encrypted scoped IT Glue exports."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 1800
+
+  197650a6-d395-534e-8ff9-c63f7bf9c51e:
+    id: 197650a6-d395-534e-8ff9-c63f7bf9c51e
+    name: docs_export_recovery_status
+    path: functions/export_recovery.py
+    function_name: docs_export_recovery_status
+    type: tool
+    description: "Read safe progress for a migration's scoped export file recovery."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 1800
+
+  bd83236f-90b4-5bce-98dd-4dfca2ad1fdf:
+    id: bd83236f-90b4-5bce-98dd-4dfca2ad1fdf
+    name: docs_export_recovery_resume
+    path: functions/export_recovery.py
+    function_name: docs_export_recovery_resume
+    type: tool
+    description: "Resume export file recovery from its persisted file checkpoint."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 1800
+
+  8c97b1a6-f304-59bb-be06-314434085f83:
+    id: 8c97b1a6-f304-59bb-be06-314434085f83
+    name: docs_export_recovery_cancel
+    path: functions/export_recovery.py
+    function_name: docs_export_recovery_cancel
+    type: tool
+    description: "Stop export recovery at its next file checkpoint without losing progress."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 1800
+
+  42301d3c-6997-51a2-8d2b-d27278ccf0e9:
+    id: 42301d3c-6997-51a2-8d2b-d27278ccf0e9
+    name: docs_export_recovery_discard
+    path: functions/export_recovery.py
+    function_name: docs_export_recovery_discard
+    type: tool
+    description: "Remove a stopped recovery's owned source export and encrypted password, retaining recovered files."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 1800
+
+  9ff8bceb-ec6a-5b9c-8c63-45506b3f8881:
+    id: 9ff8bceb-ec6a-5b9c-8c63-45506b3f8881
+    name: docs_export_recovery_step
+    path: functions/export_recovery.py
+    function_name: docs_export_recovery_step
+    type: workflow
+    description: "Process one durable source export/file recovery checkpoint without local archive storage."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 1800
+
+  b6cc5a80-fecd-4fd6-9aa6-ceeb92dbf020:
+    id: b6cc5a80-fecd-4fd6-9aa6-ceeb92dbf020
+    name: docs_migration_diagnose_references
+    path: functions/migration.py
+    function_name: docs_migration_diagnose_references
+    type: workflow
+    description: "Classify selected migrated document folders and related targets using read-only IT Glue source verification."
+    category: Bifrost Docs Migration
+    access_level: role_based
+    role_names: ["Bifrost Docs Administrator"]
+    timeout_seconds: 1800

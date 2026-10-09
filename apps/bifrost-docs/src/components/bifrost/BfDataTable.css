@@ -1,0 +1,34 @@
+.bds-data-table__scroller {
+  max-width: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.bds-data-table__table {
+  width: 100%;
+  min-width: var(--bds-data-table-min-width, 100%);
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.bds-data-table__table th,
+.bds-data-table__table td {
+  min-width: 9rem;
+}
+
+.bds-data-table__table th {
+  white-space: nowrap;
+}
+
+.bds-data-table__table th button {
+  font: inherit;
+}
+
+.bds-data-table__table td {
+  overflow-wrap: anywhere;
+}
+
+.bds-data-table__table .bds-data-table__selection {
+  width: 42px;
+  min-width: 42px;
+}

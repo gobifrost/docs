@@ -1,0 +1,180 @@
+{
+  "canonical_repository": "https://github.com/gobifrost/design-system",
+  "canonical_commit": "11da72e21ba5c304b2a7702140b933d514f36012",
+  "canonical_path": "apps/bifrost-design-system/src/design-system",
+  "files": [
+    {
+      "file": "BfActionMenu.tsx",
+      "canonical_sha256": "c6f1c3e3e520e0aa47e6b262e9588b083cc794368b7eaad4cf1b7c63aaf06105",
+      "app_sha256": "267a4ccd438a1017fe74807d0d0370485f5dc411c8538ba087b83c717ec737e0",
+      "status": "stylesheet_import_only"
+    },
+    {
+      "file": "BfAlert.tsx",
+      "canonical_sha256": "acd5f6a3be5a79b8d1d14f02bd1e53e488dfd7b44e6ea4d9d79e5fe66d5828ad",
+      "app_sha256": "243574832c65b2282242e3576133bce5551d09d076b2e02566a25b3e2546380e",
+      "status": "stylesheet_import_only"
+    },
+    {
+      "file": "BfButton.tsx",
+      "canonical_sha256": "5b8fa16ec1664e84b9f3b41f5ea7b7b6db1e582e90f4f2cde0639839dc2344c8",
+      "app_sha256": "bef5b51a351bc3e96e77fed409a4934c117385c9249ed42a8e1b380a11266113",
+      "status": "stylesheet_import_only"
+    },
+    {
+      "file": "BfChip.tsx",
+      "canonical_sha256": "cf8026f5fb05eeefc8b6d04c864e1609737f49bc53c0559f69e1cbdc804e2b1d",
+      "app_sha256": "40edc6574048dc20a30fcba7521798fe8ab8210d68e725901483e9a477306a67",
+      "status": "stylesheet_import_only"
+    },
+    {
+      "file": "BfCombobox.tsx",
+      "canonical_sha256": "ea4cfcc973849946006ba344b9543b9a8b8af41ca301da516960d625778e3a88",
+      "app_sha256": "abaa89660b74eca8660da3e610363f574d72b9ab697ef2445393e450890386d9",
+      "status": "app_adaptation"
+    },
+    {
+      "file": "BfDataTable.test.tsx",
+      "canonical_sha256": "d1cc0c6cc9b8e32e05d793654ddfebd259ae8e33d613fa4119112ff2c2a0ab4d",
+      "app_sha256": "1e2a8db718d8059f4f93c783472e40d5110e10d02491790aaca13c1d595d3fa7",
+      "status": "app_adaptation"
+    },
+    {
+      "file": "BfDataTable.tsx",
+      "canonical_sha256": "d1f92a2075f1df798a38f5bdfe64135cb3bf803d000cfc2b4dd157cf4e3a7a17",
+      "app_sha256": "e6df8f5c0cba504f1b6e2f558d868b5876a4eba61af1506015db504f01891cae",
+      "status": "app_adaptation"
+    },
+    {
+      "file": "BfDialog.tsx",
+      "canonical_sha256": "d3d37bc69355ff55013d79124bbf9453eecfc9458602b91a6df244b71d467fb7",
+      "app_sha256": "ca56d329b2366e963d27c4240a7bef568bd0879b83a75513670ee955fac1c3cc",
+      "status": "app_adaptation"
+    },
+    {
+      "file": "BfExecutionStream.tsx",
+      "canonical_sha256": "643e798578d3327378af592e59ce189560c0cf53befb2bfd6b72c4fd383d7883",
+      "app_sha256": "69e2d016eafbe6bea70b9d8ae81592a31e6d624cebdebadd7d9de9a23f0ebc85",
+      "status": "stylesheet_import_only"
+    },
+    {
+      "file": "BfField.tsx",
+      "canonical_sha256": "2115ca769b163baa69d0b0be24d0215c21d52335149e2c65f18ab7d6182d2a51",
+      "app_sha256": "983c0e8f72a8abd808861539f9c7f1af614c42df43510dc5831b27eb6f1a1f6a",
+      "status": "stylesheet_import_only"
+    },
+    {
+      "file": "BfSelection.tsx",
+      "canonical_sha256": "505b7bdc13ff7ac4652d242b34d8da04f894f3df8ff727e6bb94a801973819f6",
+      "app_sha256": "647218ea83757b74a519810f2e7bbf1c9c51c5bd1a9b6f43f790de305ec0b9a8",
+      "status": "stylesheet_import_only"
+    },
+    {
+      "file": "components.css",
+      "canonical_sha256": "04846d4258879b7a4a01f7af95c44a4b8413c027855f58f4379b89cc0659643b",
+      "app_sha256": "5dbde79db5e64db4276251a50b8b14e9fbcb2fa812c8cb021db5341a91558320",
+      "status": "app_adaptation"
+    },
+    {
+      "file": "execution.css",
+      "canonical_sha256": "fc78c9041f9fceb3003873d1219bcffb84cea5452652da27da649628a5179cd1",
+      "app_sha256": "fc78c9041f9fceb3003873d1219bcffb84cea5452652da27da649628a5179cd1",
+      "status": "identical"
+    },
+    {
+      "file": "tokens.css",
+      "canonical_sha256": "e25af85c7c76d55c513d9d04a78e7f98fbccd79be5833516531f46f26d3bf560",
+      "app_sha256": "e25af85c7c76d55c513d9d04a78e7f98fbccd79be5833516531f46f26d3bf560",
+      "status": "identical"
+    },
+    {
+      "file": "types.ts",
+      "canonical_sha256": "6645851963b830f1f062b1eb7d17c12faef1ba79821d346dec2fbbd4b7c04d5c",
+      "app_sha256": "6645851963b830f1f062b1eb7d17c12faef1ba79821d346dec2fbbd4b7c04d5c",
+      "status": "identical"
+    }
+  ],
+  "adaptations": {
+    "components.css": "Canonical rules run in the Tailwind components layer; app table links/selection and responsive hit areas extend the shared styles. This makes visibility/size utilities work without changing canonical tokens.",
+    "BfDialog.tsx": "Existing approved app superset: accessible title/description IDs and dismiss behavior.",
+    "BfDataTable.tsx": "Existing app superset: semantic row links, selection, controlled sorting; canonical 16px native checkbox with 32px labelled click target that does not activate the row.",
+    "tokens.css": "Byte-identical canonical tokens; no local palette or typography reinterpretation.",
+    "BfCombobox.tsx": "Canonical appearance and placement rules retained; option lists portal into their owning native dialog so mobile bulk-action menus remain in the browser top layer."
+  },
+  "integration_notes": [
+    "Canonical tokens are byte-identical. Component stylesheet rules retain canonical values and are placed in the CSS components layer so Tailwind responsive utilities apply.",
+    "Imports precede CSS rules; compiled output includes canonical tokens without external token stylesheet requests.",
+    "App table/dialog supersets retain the canonical appearance and add existing app behavior. Action menus have viewport-bounded scrolling; compact controls have usable touch targets."
+  ],
+  "visual_repair": {
+    "date": "2026-10-03",
+    "shell_references": [
+      "bifrost-grc-v2/src/_layout.tsx",
+      "bifrost-dmarc/src/components/AppShell.tsx"
+    ],
+    "cascade": "Load index.css before App imports so Tailwind base cannot override canonical component layer.",
+    "adaptations": [
+      "SDK-owned account/theme header",
+      "Compact selected-record action group",
+      "Dynamic-column table minimums and independent overflow",
+      "Persistent resizable document navigation with mobile disclosure"
+    ]
+  },
+  "brand_asset": {
+    "canonical_path": "apps/bifrost-design-system/public/brand/logo-square.svg",
+    "app_path": "apps/bifrost-docs/src/components/layout/logo-square.svg",
+    "sha256": "9b1fc2178a6f31c74a10b4e3b7dd6b376f16d3024f21133301c7e1072fd305a2",
+    "status": "byte_identical"
+  },
+  "font_delivery": {
+    "source": "bifrost/client/public/fonts",
+    "families": [
+      "Inter",
+      "Prompt",
+      "JetBrains Mono"
+    ],
+    "delivery": "Vite versioned app assets; no external font-service bootstrap dependency",
+    "payloads": [
+      {
+        "file": "inter-latin-400.woff2",
+        "sha256": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62"
+      },
+      {
+        "file": "inter-latin-ext-400.woff2",
+        "sha256": "34b9c504cab7a73e37b746343a449132e56cf7b5481af2cb81dc74dcff25c956"
+      },
+      {
+        "file": "jetbrains-mono-latin-400.woff2",
+        "sha256": "83c005d49d8a6a50474c73a5a36ac0468076e9c4a29da7bdb14995d80560a5be"
+      },
+      {
+        "file": "jetbrains-mono-latin-ext-400.woff2",
+        "sha256": "db5ff4db83e580426280e9337a58dc57d3a83784a1b03ad80914651594441d52"
+      },
+      {
+        "file": "prompt-latin-500.woff2",
+        "sha256": "b09858415497a3cada37fee53381c45f476d80f0db035155614991ba55384368"
+      },
+      {
+        "file": "prompt-latin-600.woff2",
+        "sha256": "8808aa334090ad37a8a0f8660a014b74cdcc31d1e9afd5d817a49328f32c9b59"
+      },
+      {
+        "file": "prompt-latin-700.woff2",
+        "sha256": "54eb2e1925b4a3edd3460b8140546fb3e7767666d7ac1c1fcc246d3f1ab8157a"
+      },
+      {
+        "file": "prompt-latin-ext-500.woff2",
+        "sha256": "814bb268fba7281a3a3ffb79377aa9860d585e713611d8df431039add8dd6c92"
+      },
+      {
+        "file": "prompt-latin-ext-600.woff2",
+        "sha256": "0c463fe34a07ab6474e133286dd5030ff9107ef33ad866f27129264701e4bb4a"
+      },
+      {
+        "file": "prompt-latin-ext-700.woff2",
+        "sha256": "8bdbf24ddf3abf43391316abea4f6e55075905a5ffb5798b0b47440b5f2e3a8d"
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.pyc
+apps/*/node_modules/
+apps/*/dist/
+apps/*/docs/browser-evidence/
+
+# Keep the selected fixture release evidence; older loose captures stay local.
+docs/browser-evidence/*
+!docs/browser-evidence/release-20261002/

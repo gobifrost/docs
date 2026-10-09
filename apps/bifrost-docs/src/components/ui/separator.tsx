@@ -1,0 +1,18 @@
+import type { ComponentProps } from "react";
+import { Separator as SeparatorPrimitive } from "radix-ui";
+import { cn } from "@/lib/ds-utils";
+
+export function Separator({ className, orientation = "horizontal", decorative = true, ...props }: ComponentProps<typeof SeparatorPrimitive.Root>) {
+  return (
+    <SeparatorPrimitive.Root
+      decorative={decorative}
+      orientation={orientation}
+      className={cn(
+        "shrink-0 bg-[var(--bf-line)]",
+        orientation === "horizontal" ? "h-px w-full" : "h-full w-px",
+        className,
+      )}
+      {...props}
+    />
+  );
+}

@@ -1,0 +1,35 @@
+.document-workspace { display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; align-items: start; }
+.document-workspace.has-navigation { grid-template-columns: var(--docs-document-pane-width) 24px minmax(0, 1fr); }
+.document-workspace__navigation { position: sticky; top: 0; min-width: 0; }
+.document-workspace__resize { position: sticky; top: 0; height: min(36rem, calc(100dvh - 10rem)); cursor: col-resize; touch-action: none; }
+.document-workspace__resize::before { content: ""; position: absolute; inset: 0 auto 0 50%; width: 1px; background: var(--bf-line); }
+.document-workspace__resize:hover::before, .document-workspace__resize:focus-visible::before { background: var(--bf-primary); }
+.document-workspace__resize:focus-visible { outline: 2px solid var(--bf-primary); outline-offset: -4px; }
+.document-workspace__content { min-width: 0; }
+.document-workspace__browse { justify-self: start; min-height: 44px; }
+.document-workspace__drawer[data-slot="dialog-content"] {
+  inset: 0 auto 0 0;
+  display: flex;
+  flex-direction: column;
+  width: min(22rem, calc(100vw - 2rem));
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  transform: none;
+  gap: 12px;
+  padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  overflow: hidden;
+}
+.document-workspace__drawer-header { display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 12px; }
+.document-workspace__drawer-header [data-slot="dialog-title"] { font-size: 16px; }
+.document-workspace__drawer-header button { width: 44px; height: 44px; }
+.document-workspace__drawer .document-sidebar { flex: 1 1 auto; max-block-size: none; padding: 0; border: 0; border-radius: 0; background: transparent; }
+.document-workspace__drawer .document-sidebar__tree { max-block-size: none; }
+.document-workspace__drawer .document-sidebar__add { right: 0; min-width: 44px; }
+.document-workspace__drawer .document-sidebar button { min-height: 44px; }
+.document-workspace__drawer .bds-action-menu__popover [role="menuitem"] { min-height: 44px; }
+.document-workspace__drawer .document-sidebar__folder-row > button[aria-expanded] { width: 44px; }
+@media (max-width: 1023px) {
+  .document-workspace, .document-workspace.has-navigation { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .document-workspace__resize { display: none; }
+}

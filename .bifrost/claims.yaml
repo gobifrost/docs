@@ -1,0 +1,11 @@
+claims:
+  32e95591-3cc9-4ffe-a05e-113fba1a72c2:
+    id: 32e95591-3cc9-4ffe-a05e-113fba1a72c2
+    name: docs_allowed_file_paths
+    description: Organization-owned file prefixes visible to the current Bifrost Docs reader.
+    type: list
+    query:
+      table: docs-file-org-grants
+      where:
+        eq: [{row: organization_id}, {user: organization_id}]
+      select: path_prefix

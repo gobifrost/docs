@@ -1,0 +1,75 @@
+file_policies:
+  8f67335a-1db8-5fb7-a79a-42f6300dc88c:
+    id: 8f67335a-1db8-5fb7-a79a-42f6300dc88c
+    location: docs-content
+    path: ''
+    policies: &docs_file_policies
+      - name: platform_admin_bypass
+        actions: [read, write, delete, list]
+        when: {user: is_platform_admin}
+      - name: docs_file_read
+        actions: [read, list]
+        when:
+          or:
+            - and:
+                - {user: is_provider_org}
+                - or:
+                    - {call: has_role, args: ["Bifrost Docs Reader"]}
+                    - {call: has_role, args: ["Bifrost Docs Editor"]}
+                    - {call: has_role, args: ["Bifrost Docs Administrator"]}
+            - and:
+                - or:
+                    - {call: has_role, args: ["Bifrost Docs Reader"]}
+                    - {call: has_role, args: ["Bifrost Docs Editor"]}
+                    - {call: has_role, args: ["Bifrost Docs Administrator"]}
+                - path_within_any: [{file: path}, {claims: docs_allowed_file_paths}]
+      - name: docs_file_write
+        actions: [write, delete]
+        when:
+          or:
+            - and:
+                - {user: is_provider_org}
+                - or:
+                    - {call: has_role, args: ["Bifrost Docs Editor"]}
+                    - {call: has_role, args: ["Bifrost Docs Administrator"]}
+            - and:
+                - or:
+                    - {call: has_role, args: ["Bifrost Docs Editor"]}
+                    - {call: has_role, args: ["Bifrost Docs Administrator"]}
+                - path_within_any: [{file: path}, {claims: docs_allowed_file_paths}]
+  115ea835-6ed3-5cd6-a9d9-ffec45a0e330:
+    id: 115ea835-6ed3-5cd6-a9d9-ffec45a0e330
+    location: docs-attachments
+    path: ''
+    policies: *docs_file_policies
+  5af9cf78-1564-4725-b6b7-f0c5c8b914d9:
+    id: 5af9cf78-1564-4725-b6b7-f0c5c8b914d9
+    location: docs-restricted-content
+    path: ''
+    policies: &docs_restricted_file_policies
+      - name: platform_admin_bypass
+        actions: [read, write, delete, list]
+        when: {user: is_platform_admin}
+      - name: docs_restricted_file_admin
+        actions: [read, write, delete, list]
+        when:
+          and:
+            - {user: is_provider_org}
+            - {call: has_role, args: ["Bifrost Docs Administrator"]}
+      - name: docs_restricted_file_customer_read
+        actions: [read, list]
+        when:
+          and:
+            - {call: has_role, args: ["Bifrost Docs Administrator"]}
+            - path_within_any: [{file: path}, {claims: docs_allowed_file_paths}]
+      - name: docs_restricted_file_customer_write
+        actions: [write, delete]
+        when:
+          and:
+            - {call: has_role, args: ["Bifrost Docs Administrator"]}
+            - path_within_any: [{file: path}, {claims: docs_allowed_file_paths}]
+  26ed1ce3-a3e0-43b4-bc36-fb5efde59237:
+    id: 26ed1ce3-a3e0-43b4-bc36-fb5efde59237
+    location: docs-restricted-attachments
+    path: ''
+    policies: *docs_restricted_file_policies

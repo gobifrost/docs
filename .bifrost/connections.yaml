@@ -1,0 +1,14 @@
+connections:
+  IT Glue:
+    integration_name: IT Glue
+    position: 0
+    template:
+      name: IT Glue
+      entity_id_name: IT Glue organization ID
+      config_schema:
+        - key: api_key
+          type: secret
+          required: true
+        - key: base_url
+          type: string
+          required: false

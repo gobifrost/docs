@@ -1,0 +1,487 @@
+_anchors:
+  policies:
+    - &admin_bypass
+      name: platform_admin_bypass
+      description: Platform administrators may recover and administer Bifrost Docs data.
+      actions: [read, create, update, delete]
+      when: {user: is_platform_admin}
+    - &tenant_read
+      name: docs_tenant_read
+      description: Provider users see all clients; customer roles see their organization only.
+      actions: [read]
+      when:
+        and:
+          - or:
+              - {call: has_role, args: ["Bifrost Docs Reader"]}
+              - {call: has_role, args: ["Bifrost Docs Editor"]}
+              - {call: has_role, args: ["Bifrost Docs Administrator"]}
+          - or:
+              - {user: is_provider_org}
+              - eq: [{row: organization_id}, {user: organization_id}]
+    - &tenant_read_unrestricted
+      name: docs_tenant_read_unrestricted
+      description: Restricted records are visible only to Docs administrators.
+      actions: [read]
+      when:
+        and:
+          - or:
+              - {call: has_role, args: ["Bifrost Docs Reader"]}
+              - {call: has_role, args: ["Bifrost Docs Editor"]}
+              - {call: has_role, args: ["Bifrost Docs Administrator"]}
+          - or:
+              - {user: is_provider_org}
+              - eq: [{row: organization_id}, {user: organization_id}]
+          - or:
+              - eq: [{row: restricted}, false]
+              - {call: has_role, args: ["Bifrost Docs Administrator"]}
+    - &tenant_editor_write
+      name: docs_tenant_editor_write
+      description: Docs editors may author and edit records for their organization; provider editors may work across organizations.
+      actions: [create, update, delete]
+      when:
+        and:
+          - or:
+              - {call: has_role, args: ["Bifrost Docs Editor"]}
+              - {call: has_role, args: ["Bifrost Docs Administrator"]}
+          - or:
+              - {user: is_provider_org}
+              - eq: [{row: organization_id}, {user: organization_id}]
+    - &tenant_editor_write_unrestricted
+      name: docs_tenant_editor_write_unrestricted
+      description: Editors can change unrestricted content; restricted content remains administrator-only.
+      actions: [create, update, delete]
+      when:
+        and:
+          - or:
+              - {user: is_provider_org}
+              - eq: [{row: organization_id}, {user: organization_id}]
+          - or:
+              - {call: has_role, args: ["Bifrost Docs Administrator"]}
+              - and:
+                  - {call: has_role, args: ["Bifrost Docs Editor"]}
+                  - eq: [{row: restricted}, false]
+    - &migration_admin
+      name: docs_migration_admin
+      description: Only platform administrators or provider Docs administrators operate migrations.
+      actions: [read, create, update, delete]
+      when:
+        or:
+          - {user: is_platform_admin}
+          - and:
+              - {user: is_provider_org}
+              - {call: has_role, args: ["Bifrost Docs Administrator"]}
+    - &taxonomy_admin
+      name: docs_configuration_taxonomy_admin
+      description: Only platform administrators or provider Docs administrators manage configuration taxonomy.
+      actions: [create, update, delete]
+      when:
+        or:
+          - {user: is_platform_admin}
+          - and:
+              - {user: is_provider_org}
+              - {call: has_role, args: ["Bifrost Docs Administrator"]}
+
+tables:
+  6be75c9e-91b1-4f67-a070-15e12b205011:
+    id: 6be75c9e-91b1-4f67-a070-15e12b205011
+    name: docs-file-org-grants
+    description: Immutable organization path prefixes used by customer file policies.
+    schema:
+      columns:
+        - {name: organization_id, type: string}
+        - {name: path_prefix, type: string}
+    policies:
+      - *admin_bypass
+      - *tenant_read
+      - *migration_admin
+      - name: docs_safe_file_grant_create
+        description: Docs editors may establish only their own organization's exact file prefix.
+        actions: [create]
+        when:
+          and:
+            - or:
+                - {call: has_role, args: ["Bifrost Docs Editor"]}
+                - {call: has_role, args: ["Bifrost Docs Administrator"]}
+            - or:
+                - {user: is_provider_org}
+                - eq: [{row: organization_id}, {user: organization_id}]
+            - eq: [{row: path_prefix}, {row: organization_id}]
+
+  74a63f56-e708-46b1-a3fe-daf65d786b19:
+    id: 74a63f56-e708-46b1-a3fe-daf65d786b19
+    name: docs-migration-runs
+    description: Durable orchestration state and cursors for resumable IT Glue migrations.
+    schema:
+      columns:
+        - {name: status, type: string}
+        - {name: mode, type: string}
+        - {name: implementation_version, type: string}
+        - {name: bifrost_organization_ids, type: json}
+        - {name: resource_types, type: json}
+        - {name: phase, type: string}
+        - {name: cursors, type: json}
+        - {name: counts, type: json}
+        - {name: mapping_queue, type: json}
+        - {name: recovery, type: json}
+        - {name: reconciliation_counts, type: json}
+        - {name: incomplete_enumerations, type: json}
+        - {name: cancel_requested, type: bool}
+        - {name: execution_id, type: string}
+        - {name: lease_id, type: string}
+        - {name: lease_heartbeat_at, type: datetime}
+        - {name: started_at, type: datetime}
+        - {name: watermark_started_at, type: datetime}
+        - {name: source_watermark_at, type: datetime}
+        - {name: completed_at, type: datetime}
+        - {name: last_checkpoint_at, type: datetime}
+        - {name: last_error, type: string}
+    policies: [*migration_admin]
+
+  5accf696-944e-44d7-91ec-be8ca92b8ffc:
+    id: 5accf696-944e-44d7-91ec-be8ca92b8ffc
+    name: docs-migration-items
+    description: Per-source-resource checkpoint, attempt, and error state.
+    schema:
+      columns:
+        - {name: run_id, type: string}
+        - {name: organization_id, type: string}
+        - {name: source_organization_id, type: string}
+        - {name: resource_type, type: string}
+        - {name: source_id, type: string}
+        - {name: destination_id, type: string}
+        - {name: status, type: string}
+        - {name: disposition, type: string}
+        - {name: attempts, type: int}
+        - {name: source_updated_at, type: datetime}
+        - {name: started_at, type: datetime}
+        - {name: completed_at, type: datetime}
+        - {name: error_code, type: string}
+        - {name: error_message, type: string}
+    policies: [*migration_admin]
+
+  45ffa2c6-dc8a-4699-9dcd-34218ac2fe80:
+    id: 45ffa2c6-dc8a-4699-9dcd-34218ac2fe80
+    name: docs-source-map
+    description: Durable IT Glue-to-Bifrost organization and resource identity map.
+    schema:
+      columns:
+        - {name: organization_id, type: string}
+        - {name: source_organization_id, type: string}
+        - {name: source_organization_name, type: string}
+        - {name: resource_type, type: string}
+        - {name: source_id, type: string}
+        - {name: destination_id, type: string}
+        - {name: source_updated_at, type: datetime}
+        - {name: source_fingerprint, type: string}
+        - {name: migrated_at, type: datetime}
+    policies: [*migration_admin]
+
+  7e183bfe-d982-45be-a555-c3eb4d9443c0:
+    id: 7e183bfe-d982-45be-a555-c3eb4d9443c0
+    name: docs-documents
+    description: Tenant documents and IT Glue source metadata.
+    schema:
+      columns:
+        - {name: organization_id, type: string}
+        - {name: source_system, type: string}
+        - {name: source_id, type: string}
+        - {name: source_url, type: string}
+        - {name: source_updated_at, type: datetime}
+        - {name: folder_id, type: string}
+        - {name: name, type: string}
+        - {name: content, type: string}
+        - {name: rendered_content, type: string}
+        - {name: status, type: string}
+        - {name: visibility, type: string}
+        - {name: source_refs, type: json}
+        - {name: published_at, type: datetime}
+        - {name: archived, type: bool}
+        - {name: restricted, type: bool}
+        - {name: restriction_inferred, type: bool}
+        - {name: restriction_reason, type: string}
+        - {name: raw, type: json}
+    policies: [*admin_bypass, *tenant_read_unrestricted]
+
+  3c6da5ea-4797-4ec8-bffd-fb24067de016:
+    id: 3c6da5ea-4797-4ec8-bffd-fb24067de016
+    name: docs-document-folders
+    description: Tenant document folder hierarchy.
+    schema:
+      columns:
+        - {name: organization_id, type: string}
+        - {name: source_system, type: string}
+        - {name: source_id, type: string}
+        - {name: parent_id, type: string}
+        - {name: ancestor_ids, type: json}
+        - {name: name, type: string}
+        - {name: restricted, type: bool}
+        - {name: restriction_inferred, type: bool}
+        - {name: restriction_reason, type: string}
+        - {name: raw, type: json}
+    policies: [*admin_bypass, *tenant_read_unrestricted, *tenant_editor_write_unrestricted]
+
+  0dc7d0b8-8c3a-4acd-be55-e2712709813d:
+    id: 0dc7d0b8-8c3a-4acd-be55-e2712709813d
+    name: docs-attachments
+    description: Attachment and image metadata referencing tenant-scoped managed files.
+    schema:
+      columns:
+        - {name: organization_id, type: string}
+        - {name: source_system, type: string}
+        - {name: source_id, type: string}
+        - {name: parent_type, type: string}
+        - {name: parent_id, type: string}
+        - {name: file_kind, type: string}
+        - {name: restricted, type: bool}
+        - {name: file_name, type: string}
+        - {name: content_type, type: string}
+        - {name: size_bytes, type: int}
+        - {name: declared_size_bytes, type: int}
+        - {name: size_verified, type: bool}
+        - {name: transfer_version, type: string}
+        - {name: metadata_registered, type: bool}
+        - {name: quarantined, type: bool}
+        - {name: integrity_error, type: string}
+        - {name: storage_location, type: string}
+        - {name: storage_path, type: string}
+        - {name: source_updated_at, type: datetime}
+        - {name: sha256, type: string}
+        - {name: raw, type: json}
+    policies: [*admin_bypass, *tenant_read_unrestricted]
+
+  a89fcf70-8518-440c-8de7-37ea7b563c31:
+    id: a89fcf70-8518-440c-8de7-37ea7b563c31
+    name: docs-configurations
+    description: Tenant configuration assets including interface metadata.
+    schema:
+      columns:
+        - {name: is_enabled, type: bool}
+        - {name: organization_id, type: string}
+        - {name: source_system, type: string}
+        - {name: source_id, type: string}
+        - {name: source_updated_at, type: datetime}
+        - {name: name, type: string}
+        - {name: hostname, type: string}
+        - {name: asset_tag, type: string}
+        - {name: ip_address, type: string}
+        - {name: primary_ip, type: string}
+        - {name: mac_address, type: string}
+        - {name: serial_number, type: string}
+        - {name: manufacturer_name, type: string}
+        - {name: model_name, type: string}
+        - {name: configuration_type_name, type: string}
+        - {name: configuration_status_name, type: string}
+        - {name: interfaces, type: json}
+        - {name: notes, type: string}
+        - {name: archived, type: bool}
+        - {name: raw, type: json}
+    policies: [*admin_bypass, *tenant_read, *tenant_editor_write]
+
+  df33e2f5-f04c-4599-814c-49cb5a942886:
+    id: df33e2f5-f04c-4599-814c-49cb5a942886
+    name: docs-configuration-types
+    description: Tenant-scoped configuration types copied from IT Glue or authored by Docs administrators.
+    schema:
+      columns:
+        - {name: organization_id, type: string}
+        - {name: source_system, type: string}
+        - {name: source_id, type: string}
+        - {name: source_updated_at, type: datetime}
+        - {name: name, type: string}
+        - {name: active, type: bool}
+        - {name: raw, type: json}
+    policies: [*admin_bypass, *tenant_read, *taxonomy_admin]
+
+  b1dcb5a8-cb1c-4e9b-9a6d-6f2bbcd6b0c1:
+    id: b1dcb5a8-cb1c-4e9b-9a6d-6f2bbcd6b0c1
+    name: docs-configuration-statuses
+    description: Tenant-scoped configuration statuses copied from IT Glue or authored by Docs administrators.
+    schema:
+      columns:
+        - {name: organization_id, type: string}
+        - {name: source_system, type: string}
+        - {name: source_id, type: string}
+        - {name: source_updated_at, type: datetime}
+        - {name: name, type: string}
+        - {name: active, type: bool}
+        - {name: raw, type: json}
+    policies: [*admin_bypass, *tenant_read, *taxonomy_admin]
+
+  0b782f0b-8887-4c28-8c37-747dc695bb4b:
+    id: 0b782f0b-8887-4c28-8c37-747dc695bb4b
+    name: docs-locations
+    description: Tenant locations.
+    schema:
+      columns:
+        - {name: is_enabled, type: bool}
+        - {name: organization_id, type: string}
+        - {name: source_system, type: string}
+        - {name: source_id, type: string}
+        - {name: source_updated_at, type: datetime}
+        - {name: name, type: string}
+        - {name: address_1, type: string}
+        - {name: address_2, type: string}
+        - {name: city, type: string}
+        - {name: region, type: string}
+        - {name: postal_code, type: string}
+        - {name: country, type: string}
+        - {name: phone, type: string}
+        - {name: notes, type: string}
+        - {name: archived, type: bool}
+        - {name: raw, type: json}
+    policies: [*admin_bypass, *tenant_read, *tenant_editor_write]
+
+  a31c16e5-6757-4ab4-8af3-e58f0e9d62d4:
+    id: a31c16e5-6757-4ab4-8af3-e58f0e9d62d4
+    name: docs-passwords
+    description: IT Glue password metadata and a source link; protected values are not imported.
+    schema:
+      columns:
+        - {name: organization_id, type: string}
+        - {name: source_system, type: string}
+        - {name: source_id, type: string}
+        - {name: source_url, type: string}
+        - {name: source_updated_at, type: datetime}
+        - {name: name, type: string}
+        - {name: username, type: string}
+        - {name: url, type: string}
+        - {name: notes, type: string}
+        - {name: folder_id, type: string}
+        - {name: category_name, type: string}
+        - {name: resource_type, type: string}
+        - {name: resource_id, type: string}
+        - {name: restricted, type: bool}
+        - {name: restriction_inferred, type: bool}
+        - {name: restriction_reason, type: string}
+        - {name: archived, type: bool}
+        - {name: has_password, type: bool}
+        - {name: has_totp, type: bool}
+        # Legacy secret envelope columns remain temporarily so a sync can
+        # explicitly clear any rows written by earlier experimental builds.
+        - {name: secret_algorithm, type: string}
+        - {name: secret_key_version, type: int}
+        - {name: secret_nonce, type: string}
+        - {name: secret_ciphertext, type: string}
+        - {name: raw, type: json}
+    policies: [*admin_bypass, *tenant_read_unrestricted, *tenant_editor_write_unrestricted]
+
+  ed8898c9-f3f2-4094-bb58-d790a2b2e216:
+    id: ed8898c9-f3f2-4094-bb58-d790a2b2e216
+    name: docs-password-folders
+    description: Tenant password folder hierarchy.
+    schema:
+      columns:
+        - {name: organization_id, type: string}
+        - {name: source_system, type: string}
+        - {name: source_id, type: string}
+        - {name: parent_id, type: string}
+        - {name: ancestor_ids, type: json}
+        - {name: name, type: string}
+        - {name: restricted, type: bool}
+        - {name: restriction_inferred, type: bool}
+        - {name: restriction_reason, type: string}
+        - {name: raw, type: json}
+    policies: [*admin_bypass, *tenant_read_unrestricted, *tenant_editor_write_unrestricted]
+
+  2e55b706-fd4a-4d8b-9774-c82964b0c139:
+    id: 2e55b706-fd4a-4d8b-9774-c82964b0c139
+    name: docs-flexible-asset-types
+    description: IT Glue flexible asset type and field definitions.
+    schema:
+      columns:
+        - {name: active, type: bool}
+        - {name: organization_id, type: string}
+        - {name: source_system, type: string}
+        - {name: source_id, type: string}
+        - {name: name, type: string}
+        - {name: icon, type: string}
+        - {name: fields, type: json}
+        - {name: raw, type: json}
+    policies: [*admin_bypass, *tenant_read, *tenant_editor_write]
+
+  b9ac86ba-45bd-4c98-bde0-41a9ca1da109:
+    id: b9ac86ba-45bd-4c98-bde0-41a9ca1da109
+    name: docs-flexible-assets
+    description: Tenant flexible assets with source traits retained as JSON.
+    schema:
+      columns:
+        - {name: is_enabled, type: bool}
+        - {name: organization_id, type: string}
+        - {name: source_system, type: string}
+        - {name: source_id, type: string}
+        - {name: source_updated_at, type: datetime}
+        - {name: flexible_asset_type_id, type: string}
+        - {name: name, type: string}
+        - {name: traits, type: json}
+        - {name: secret_fields, type: json}
+        - {name: secret_algorithm, type: string}
+        - {name: secret_key_version, type: int}
+        - {name: secret_nonce, type: string}
+        - {name: secret_ciphertext, type: string}
+        - {name: archived, type: bool}
+        - {name: restricted, type: bool}
+        - {name: raw, type: json}
+    policies: [*admin_bypass, *tenant_read_unrestricted, *tenant_editor_write_unrestricted]
+
+  d7795928-0ac8-4dd7-b10d-8d5598fcf941:
+    id: d7795928-0ac8-4dd7-b10d-8d5598fcf941
+    name: docs-reconciliation-findings
+    description: Non-destructive source/destination drift findings produced by reconciliation runs.
+    schema:
+      columns:
+        - {name: run_id, type: string}
+        - {name: organization_id, type: string}
+        - {name: source_organization_id, type: string}
+        - {name: resource_type, type: string}
+        - {name: finding_type, type: string}
+        - {name: source_id, type: string}
+        - {name: destination_id, type: string}
+        - {name: severity, type: string}
+        - {name: status, type: string}
+        - {name: detail, type: string}
+        - {name: detected_at, type: datetime}
+        - {name: resolved_at, type: datetime}
+    policies: [*migration_admin]
+
+  1d89693a-a68e-4e7d-b2f3-c8d598e8079c:
+    id: 1d89693a-a68e-4e7d-b2f3-c8d598e8079c
+    name: docs-relationships
+    description: Tenant-safe related-item relationships between documentation entities.
+    schema:
+      columns:
+        - {name: organization_id, type: string}
+        - {name: source_system, type: string}
+        - {name: source_id, type: string}
+        - {name: source_type, type: string}
+        - {name: source_destination_id, type: string}
+        - {name: target_type, type: string}
+        - {name: target_source_id, type: string}
+        - {name: target_destination_id, type: string}
+        - {name: relationship_type, type: string}
+        - {name: raw, type: json}
+    policies: [*admin_bypass, *tenant_read, *tenant_editor_write]
+
+  7e91bb4c-0c0e-4fc2-b05a-8ac18ca19d59:
+    id: 7e91bb4c-0c0e-4fc2-b05a-8ac18ca19d59
+    name: docs-audit-events
+    description: Tenant audit events for migration, reveals, and documentation mutations.
+    schema:
+      columns:
+        - {name: organization_id, type: string}
+        - {name: event_type, type: string}
+        - {name: entity_type, type: string}
+        - {name: entity_id, type: string}
+        - {name: summary, type: string}
+        - {name: actor, type: string}
+        - {name: occurred_at, type: datetime}
+        - {name: metadata, type: json}
+    policies:
+      - *admin_bypass
+      - name: docs_audit_read
+        actions: [read]
+        when:
+          and:
+            - {call: has_role, args: ["Bifrost Docs Administrator"]}
+            - or:
+                - {user: is_provider_org}
+                - eq: [{row: organization_id}, {user: organization_id}]

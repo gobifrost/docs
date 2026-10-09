@@ -1,0 +1,42 @@
+@import "./components.css";
+
+.bds-execution { min-width: 0; overflow: hidden; border: 1px solid var(--bf-line); border-radius: var(--bf-radius-feature); background: var(--bf-paper); color: var(--bf-ink); font-family: var(--bf-font-sans); }
+.bds-execution__header { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 24px; background: var(--bf-surface-raised); }
+.bds-execution__header h2 { margin: 0 0 6px; font-size: 18px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+.bds-execution__header code { color: var(--bf-muted); font: 12px var(--bf-font-mono); overflow-wrap: anywhere; }
+.bds-execution__status { display: inline-flex; flex: none; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; }
+.bds-execution[data-status="succeeded"] .bds-execution__status { color: var(--bf-success); }
+.bds-execution[data-status="failed"] .bds-execution__status { color: var(--bf-danger); }
+.bds-execution__bridge { height: 2px; overflow: hidden; background: var(--bf-line); }
+.bds-execution__bridge span { display: block; width: 200%; height: 100%; background: var(--bf-bridge); background-size: 50% 100%; opacity: 0; }
+.bds-execution[data-status="running"][data-connection="connected"] .bds-execution__bridge span { opacity: 1; animation: bf-stream-transfer var(--bf-motion-progress) linear infinite; }
+.bds-execution__toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 24px; border-bottom: 1px solid var(--bf-line); color: var(--bf-muted); font-size: 12px; }
+.bds-execution__toolbar > span:first-child { display: flex; align-items: center; gap: 8px; }
+.bds-execution__viewport { height: 340px; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-color: var(--bf-line-strong) transparent; }
+.bds-execution__viewport:focus-visible { outline: 2px solid var(--bf-primary); outline-offset: -2px; }
+.bds-execution__events { margin: 0; padding: 16px 24px; list-style: none; }
+.bds-execution__events li { display: grid; grid-template-columns: 72px 64px minmax(0, 1fr); gap: 14px; padding: 9px 0; font-size: 12px; line-height: 1.65; }
+.bds-execution__events time { color: var(--bf-muted); font-family: var(--bf-font-mono); font-variant-numeric: tabular-nums; }
+.bds-execution__events code { font-family: var(--bf-font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+.bds-execution__level { color: var(--bf-muted); }
+.bds-execution__events [data-level="success"] .bds-execution__level { color: var(--bf-success); }
+.bds-execution__events [data-level="warning"] .bds-execution__level { color: var(--bf-warning); }
+.bds-execution__events [data-level="error"] .bds-execution__level { color: var(--bf-danger); }
+.bds-execution__connection { display: flex; align-items: center; gap: 12px; padding: 12px 24px; color: var(--bf-warning); background: var(--bf-warning-soft); border-bottom: 1px solid var(--bf-line); }
+.bds-execution__connection > svg { flex: none; }
+.bds-execution__connection p { flex: 1; margin: 0; font-size: 13px; }
+.bds-execution__empty { padding: 44px 24px; margin: 0; color: var(--bf-muted); font-size: 13px; }
+.bds-execution__footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; padding: 8px 24px; border-top: 1px solid var(--bf-line); color: var(--bf-muted); font-size: 12px; }
+@keyframes bf-stream-transfer { to { transform: translateX(-50%); } }
+@media (max-width: 620px) {
+  .bds-execution__header { padding: 20px 16px; align-items: flex-start; flex-direction: column; gap: 12px; }
+  .bds-execution__toolbar, .bds-execution__footer { padding-inline: 16px; }
+  .bds-execution__events { padding: 12px 16px; }
+  .bds-execution__events li { grid-template-columns: 72px 1fr; gap: 2px 12px; padding: 12px 0; }
+  .bds-execution__events code { grid-column: 1 / -1; }
+  .bds-execution__connection { flex-wrap: wrap; padding: 12px 16px; }
+  .bds-execution__footer { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bds-execution[data-status="running"][data-connection="connected"] .bds-execution__bridge span { animation: none; }
+}

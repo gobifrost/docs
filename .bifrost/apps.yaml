@@ -1,0 +1,13 @@
+apps:
+  e571851a-e74a-4fd8-b86f-e7ca68e61e15:
+    id: e571851a-e74a-4fd8-b86f-e7ca68e61e15
+    slug: bifrost-docs
+    name: Bifrost Docs
+    description: Tenant-safe documentation with an Administrator-only resumable IT Glue migration area.
+    path: apps/bifrost-docs
+    app_model: standalone_v2
+    access_level: role_based
+    role_names:
+      - Bifrost Docs Reader
+      - Bifrost Docs Editor
+      - Bifrost Docs Administrator

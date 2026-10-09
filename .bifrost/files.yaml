@@ -1,0 +1,5 @@
+locations:
+  - docs-content
+  - docs-attachments
+  - docs-restricted-content
+  - docs-restricted-attachments
